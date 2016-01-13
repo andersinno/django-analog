@@ -1,0 +1,21 @@
+sudo: false
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.4"
+  - "3.5"
+env:
+  - DJANGO=django~=1.4.0
+  - DJANGO=django~=1.5.0
+  - DJANGO=django~=1.6.0
+  - DJANGO=django~=1.7.0
+  - DJANGO=django~=1.8.0
+  - DJANGO=django~=1.9.0
+install:
+  - pip install -U pip
+  - pip install $DJANGO coveralls -e .
+script:
+  - flake8 analog
+  - py.test -vvv --cov
+after_success: coveralls
