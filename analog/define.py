@@ -22,8 +22,9 @@ def define_log_model(
     The parent model is anointed with two new attributes:
 
     * ``add_log_entry``, a function to add a log entry. (See
-      :func:`add_log_entry` for details, but heed the fact that the
-      ``target`` argument will be implicitly passed.)
+      :func:`BaseLogEntry.add_log_entry` for details,
+      but heed the fact that the ``target`` argument will be
+      implicitly passed.)
     * ``log_model``, a reference to the log entry model.
 
     :param model_class: The model class this log entry model is for.
