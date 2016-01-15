@@ -30,7 +30,7 @@ class BaseLogEntry(models.Model):
     target = None  # This will be overridden dynamically
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        getattr(settings, "AUTH_USER_MODEL", "auth.User"),
         null=True, on_delete=models.PROTECT
     )
     message = models.CharField(max_length=256)

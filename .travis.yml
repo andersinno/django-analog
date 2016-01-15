@@ -12,9 +12,27 @@ env:
   - DJANGO=django~=1.7.0
   - DJANGO=django~=1.8.0
   - DJANGO=django~=1.9.0
+matrix:
+  exclude:
+    - python: "2.6"
+      env: DJANGO=django~=1.7.0
+    - python: "2.6"
+      env: DJANGO=django~=1.8.0
+    - python: "2.6"
+      env: DJANGO=django~=1.9.0
+    - python: "3.4"
+      env: DJANGO=django~=1.4.0  
+    - python: "3.5"
+      env: DJANGO=django~=1.4.0
+    - python: "3.5"
+      env: DJANGO=django~=1.5.0
+    - python: "3.5"
+      env: DJANGO=django~=1.6.0
+    - python: "3.5"
+      env: DJANGO=django~=1.7.0
 install:
   - pip install -U pip
-  - pip install $DJANGO coveralls -e .
+  - "pip install $DJANGO coveralls -e .[dev]"
 script:
   - flake8 analog
   - py.test -vvv --cov
