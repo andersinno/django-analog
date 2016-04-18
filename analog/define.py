@@ -57,9 +57,19 @@ def define_log_model(
 
     log_entry_class = type(str(log_model_name), (base_class,), class_dict)
 
-    def add_log_entry(self, *args, **kwargs):
-        kwargs["target"] = self
-        return log_entry_class.add_log_entry(*args, **kwargs)
+    def add_log_entry(
+        self, message, identifier=None, kind="other",
+        user=None, extra=None, save=True
+    ):
+        return log_entry_class.add_log_entry(
+            target=self,
+            message=message,
+            identifier=identifier,
+            kind=kind,
+            user=user,
+            extra=extra,
+            save=save
+        )
 
     setattr(model_class, "add_log_entry", add_log_entry)
     setattr(model_class, "log_model", log_entry_class)

@@ -34,9 +34,13 @@ def test_model_sanity():
 
 
 @pytest.mark.django_db
-def test_add_log_entry():
+@pytest.mark.parametrize("kwarg", (False, True))
+def test_add_log_entry(kwarg):
     lm = LoggedModel.objects.create()
-    lm.add_log_entry(message="hello, world")
+    if kwarg:
+        lm.add_log_entry(message="hello, world")
+    else:
+        lm.add_log_entry("hello, world")
     assert lm.log_entries.count() == 1
     log_entry = qs_last(lm.log_entries)
     assert isinstance(log_entry, LoggedModelLogEntry)
