@@ -136,3 +136,10 @@ def test_custom_kwarg():
     target_object.add_log_entry(message="yay", private=False)
     assert target_object.log_entries.filter(private=True).count() == 1
     assert target_object.log_entries.filter(private=False).count() == 1
+
+
+@pytest.mark.django_db
+def test_unsaved_object_logging_raises_error():
+    target_object = LoggedModel()
+    with pytest.raises(ValueError):
+        target_object.add_log_entry(message="nope")
