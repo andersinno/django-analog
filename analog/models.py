@@ -64,7 +64,8 @@ class BaseLogEntry(models.Model):
     def add_log_entry(
         cls,
         target, message, identifier=None, kind="other",
-        user=None, extra=None, save=True
+        user=None, extra=None, save=True,
+        **kwargs
     ):
         """
         Add a log entry.
@@ -91,6 +92,10 @@ class BaseLogEntry(models.Model):
         :param extra: Extra data, if applicable. If set, this must be
                       serializable to JSON; ``dict``s are a good idea.
         :type extra: object|None
+        :param kwargs: Any other fields to pass to the constructor of the
+                       class. Mainly useful with log classes derived from
+                       `BaseLogEntry`.
+        :type kwargs: dict
         :param save: Whether to immediately save the log entry. Default True.
         :type save: bool
         :return: The created log entry
@@ -111,6 +116,7 @@ class BaseLogEntry(models.Model):
             user=user,
             kind=kind,
             extra=(extra or None),
+            **kwargs
         )
         if target is None:
             kwargs.pop('target')

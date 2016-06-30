@@ -127,3 +127,12 @@ def test_free_log_entries():
     assert fle.pk
     assert not fle.target
     assert qs_last(FreeLogEntry.objects.all()) == fle
+
+
+@pytest.mark.django_db
+def test_custom_kwarg():
+    target_object = LoggedModel.objects.create()
+    target_object.add_log_entry(message="shh", private=True)
+    target_object.add_log_entry(message="yay", private=False)
+    assert target_object.log_entries.filter(private=True).count() == 1
+    assert target_object.log_entries.filter(private=False).count() == 1
