@@ -59,7 +59,7 @@ def define_log_model(
 
     def add_log_entry(
         self, message, identifier=None, kind="other",
-        user=None, extra=None, save=True
+        user=None, extra=None, save=True, **kwargs
     ):
         return log_entry_class.add_log_entry(
             target=self,
@@ -68,7 +68,8 @@ def define_log_model(
             kind=kind,
             user=user,
             extra=extra,
-            save=save
+            save=save,
+            **kwargs
         )
 
     setattr(model_class, "add_log_entry", add_log_entry)

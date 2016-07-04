@@ -25,6 +25,11 @@ class BaseLogEntry(models.Model):
     Abstract base model class for the various log models.
 
     The concrete models are created by :func:`define_log_model`.
+
+    In addition, directly deriving a model from `BaseLogEntry` is supported
+    (for instance, to allow for log entries that are not attached to other
+    models), though the `add_log_entry` function will naturally not be
+    automatically augmented to pass a `target` parameter.
     """
 
     target = None  # This will be overridden dynamically
@@ -59,7 +64,8 @@ class BaseLogEntry(models.Model):
     def add_log_entry(
         cls,
         target, message, identifier=None, kind="other",
-        user=None, extra=None, save=True
+        user=None, extra=None, save=True,
+        **kwargs
     ):
         """
         Add a log entry.
@@ -86,12 +92,16 @@ class BaseLogEntry(models.Model):
         :param extra: Extra data, if applicable. If set, this must be
                       serializable to JSON; ``dict``s are a good idea.
         :type extra: object|None
+        :param kwargs: Any other fields to pass to the constructor of the
+                       class. Mainly useful with log classes derived from
+                       `BaseLogEntry`.
+        :type kwargs: dict
         :param save: Whether to immediately save the log entry. Default True.
         :type save: bool
         :return: The created log entry
         """
 
-        if not getattr(target, "pk", None):
+        if target is not None and not getattr(target, "pk", None):
             raise ValueError("Can not create log entry for unsaved object")
 
         kind = _map_kind(kind)
@@ -99,14 +109,19 @@ class BaseLogEntry(models.Model):
         if not getattr(user, "pk", None):
             user = None
 
-        log_entry = cls(
+        kwargs = dict(
             target=target,
             message=message,
             identifier=force_text(identifier or "", errors="ignore")[:64],
             user=user,
             kind=kind,
             extra=(extra or None),
+            **kwargs
         )
+        if target is None:
+            kwargs.pop('target')
+        log_entry = cls(**kwargs)
+        log_entry.clean()
         if save:
             log_entry.save()
         return log_entry
