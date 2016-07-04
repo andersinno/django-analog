@@ -5,7 +5,7 @@ dev_deps = ['pytest', 'pytest-django', 'pytest-cov', 'pep257', 'flake8']
 if __name__ == '__main__':
     setuptools.setup(
         name='django-analog',
-        version='0.1.1',
+        version='0.2.0',
         url='https://github.com/andersinno/django-analog',
         author='Anders Innovations',
         license='MIT',
