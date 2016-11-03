@@ -11,13 +11,13 @@ dev_deps = [
 if __name__ == '__main__':
     setuptools.setup(
         name='django-analog',
-        version='0.2.0',
+        version='0.3.0',
         url='https://github.com/andersinno/django-analog',
         author='Anders Innovations',
         license='MIT',
         install_requires=[
             'Django',
-            'jsonfield>=1.0,<1.1'
+            'jsonfield>=1.0,<1.1',
         ],
         tests_require=dev_deps,
         extras_require={"dev": dev_deps},
