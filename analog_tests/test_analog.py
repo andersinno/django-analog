@@ -1,7 +1,7 @@
 import pytest
 from analog import define_log_model, LogEntryKind, BaseLogEntry
 from analog.exceptions import UnknownLogKind
-from analog_tests.models import LoggedModel, LoggedModelLogEntry, FreeLogEntry
+from analog_tests.models import LoggedModel, LoggedModelLogEntry, FreeLogEntry, SecondLoggedModel
 from django.db import models
 
 
@@ -143,3 +143,13 @@ def test_unsaved_object_logging_raises_error():
     target_object = LoggedModel()
     with pytest.raises(ValueError):
         target_object.add_log_entry(message="nope")
+
+
+@pytest.mark.django_db
+def test_nullable_log_model():
+    m = SecondLoggedModel.objects.create()
+    m.add_log_entry(message="hello")
+    LogEntry = SecondLoggedModel.log_model
+    LogEntry.objects.create(message="world")
+    assert LogEntry.objects.first().target == m
+    assert LogEntry.objects.last().target == None
