@@ -20,3 +20,10 @@ LoggedModelLogEntry = define_log_model(LoggedModel, base_class=PrivateLogEntry)
 
 class FreeLogEntry(BaseLogEntry):
     pass
+
+
+class SecondLoggedModel(models.Model):
+    pass
+
+
+SecondLoggedModelLogEntry = define_log_model(SecondLoggedModel, allow_null_target=True)

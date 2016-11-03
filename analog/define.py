@@ -7,7 +7,8 @@ all_known_log_models = {}
 def define_log_model(
     model_class,
     base_class=BaseLogEntry,
-    on_delete=models.CASCADE
+    on_delete=models.CASCADE,
+    allow_null_target=False,
 ):
     """
     Define a log model for a given Django model class ("parent model").
@@ -36,9 +37,15 @@ def define_log_model(
                       log entries are deleted when the logged model
                       instance is.  `PROTECT` would be another sane
                       option.
+    :param allow_null_target: Whether to allow null values as target.
+                              This lets you have "generic" model log
+                              entries in the same table as instance
+                              specific ones.
+    :type allow_null_target: bool
     :return: The log entry model.
     """
     log_model_name = "%sLogEntry" % model_class.__name__
+    allow_null_target = bool(allow_null_target)
 
     class Meta:
         app_label = model_class._meta.app_label
@@ -46,9 +53,11 @@ def define_log_model(
 
     class_dict = {
         "target": models.ForeignKey(
-            model_class,
+            to=model_class,
             related_name="log_entries",
-            on_delete=on_delete
+            on_delete=on_delete,
+            blank=allow_null_target,
+            null=allow_null_target,
         ),
         "__module__": model_class.__module__,
         "Meta": Meta,
