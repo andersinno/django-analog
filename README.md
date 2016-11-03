@@ -13,6 +13,23 @@ Compatibility
 * Django 1.8+
 * Python 2.7 or Python 3.4+
 
+Basic Usage
+-----------
+
+```python
+from django.db import models
+from analog import define_log_model
+
+class MyModel(models.Model):
+    value = models.IntegerField(default=0)
+
+MyModelLogEntry = define_log_model(MyModel)
+
+m = MyModel.objects.create(value=42)
+m.add_log_entry('Something occurred')
+assert m.log_entries.last().message == 'Something occurred'
+```
+
 Development
 -----------
 
