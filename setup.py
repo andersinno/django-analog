@@ -1,6 +1,12 @@
 import setuptools
 
-dev_deps = ['pytest', 'pytest-django', 'pytest-cov', 'pep257', 'flake8']
+dev_deps = [
+    'pytest>=3.0.0',
+    'pytest-django>=3.0.0',
+    'pytest-cov',
+    'pep257',
+    'flake8',
+]
 
 if __name__ == '__main__':
     setuptools.setup(

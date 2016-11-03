@@ -7,7 +7,11 @@ Django-Analog
 
 > Simple per-model log models for Django apps
 
+Compatibility
+-------------
 
+* Django 1.8+
+* Python 2.7 or Python 3.4+
 
 Development
 -----------
