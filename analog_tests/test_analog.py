@@ -1,8 +1,9 @@
 import pytest
-from analog import define_log_model, LogEntryKind, BaseLogEntry
-from analog.exceptions import UnknownLogKind, NoExtraField
-from analog_tests.models import LoggedModel, LoggedModelLogEntry, FreeLogEntry, SecondLoggedModel, ThirdLoggedModel
 from django.db import models
+
+from analog import BaseLogEntry, define_log_model, LogEntryKind
+from analog.exceptions import NoExtraField, UnknownLogKind
+from analog_tests.models import FreeLogEntry, LoggedModel, LoggedModelLogEntry, SecondLoggedModel, ThirdLoggedModel
 
 
 class RandomModel(models.Model):

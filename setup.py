@@ -1,11 +1,13 @@
 import setuptools
 
 dev_deps = [
-    'pytest>=3.0.0',
-    'pytest-django>=3.0.0',
-    'pytest-cov',
-    'pep257',
+    'autopep8',
     'flake8',
+    'isort',
+    'pep257',
+    'pytest-cov',
+    'pytest-django>=3.0.0',
+    'pytest>=3.0.0',
 ]
 
 if __name__ == '__main__':

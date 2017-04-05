@@ -1,4 +1,5 @@
 from django.db import models
+
 from .models import BaseLogEntry
 
 all_known_log_models = {}
