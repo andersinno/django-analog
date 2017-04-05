@@ -15,10 +15,7 @@ if __name__ == '__main__':
         url='https://github.com/andersinno/django-analog',
         author='Anders Innovations',
         license='MIT',
-        install_requires=[
-            'Django',
-            'jsonfield>=1.0,<1.1',
-        ],
+        install_requires=['Django'],
         tests_require=dev_deps,
         extras_require={"dev": dev_deps},
         packages=setuptools.find_packages('.', exclude=('analog_tests',)),
