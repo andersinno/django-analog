@@ -1,7 +1,7 @@
 import pytest
 from analog import define_log_model, LogEntryKind, BaseLogEntry
-from analog.exceptions import UnknownLogKind
-from analog_tests.models import LoggedModel, LoggedModelLogEntry, FreeLogEntry, SecondLoggedModel
+from analog.exceptions import UnknownLogKind, NoExtraField
+from analog_tests.models import LoggedModel, LoggedModelLogEntry, FreeLogEntry, SecondLoggedModel, ThirdLoggedModel
 from django.db import models
 
 
@@ -100,6 +100,19 @@ def test_modify_before_save(target_object):
     le.save()
     le = qs_last(target_object.log_entries)
     assert le.message == "hey"
+
+
+@pytest.mark.django_db
+def test_extra_with_no_extra_field_is_an_error(target_object):
+    with pytest.raises(NoExtraField):
+        target_object.add_log_entry(message="hi", extra={'henlo': 'fren'})
+
+
+@pytest.mark.django_db
+def test_extra_field():
+    target_object = ThirdLoggedModel.objects.create()
+    target_object.add_log_entry(message="hi", extra='hoi')
+    assert target_object.log_entries.last().extra == 'hoi'
 
 
 @pytest.mark.django_db
