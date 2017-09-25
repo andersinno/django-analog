@@ -1,6 +1,6 @@
-from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.utils.six import string_types
+from django.utils.translation import ugettext_lazy as _
 
 _DEFAULT_KINDS = {
     "other": 0,

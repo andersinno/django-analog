@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
-from analog.exceptions import UnknownLogKind
-from analog.settings import KIND_LABELS, KINDS, KIND_IDS
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import force_text
-from django.utils.six import string_types, integer_types
-from jsonfield import JSONField
+from django.utils.six import integer_types, string_types
+
+from analog.exceptions import NoExtraField, UnknownLogKind
+from analog.settings import KIND_IDS, KIND_LABELS, KINDS
 
 
 def _map_kind(kind):
@@ -41,7 +41,6 @@ class BaseLogEntry(models.Model):
     message = models.CharField(max_length=256)
     identifier = models.CharField(max_length=64, blank=True)
     kind = models.IntegerField(default=0, db_index=True)
-    extra = JSONField(null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -91,6 +90,9 @@ class BaseLogEntry(models.Model):
                      ``settings.AUTH_USER_MODEL``) to attach to this log entry.
         :param extra: Extra data, if applicable. If set, this must be
                       serializable to JSON; ``dict``s are a good idea.
+                      This is only applicable if the model contains an `extra`
+                      field; passing non-None here if the model
+                      does not contain `extra` is an error.
         :type extra: object|None
         :param kwargs: Any other fields to pass to the constructor of the
                        class. Mainly useful with log classes derived from
@@ -115,9 +117,18 @@ class BaseLogEntry(models.Model):
             identifier=force_text(identifier or "", errors="ignore")[:64],
             user=user,
             kind=kind,
-            extra=(extra or None),
             **kwargs
         )
+
+        has_extra_field = ('extra' in cls._meta._forward_fields_map)
+        if extra is not None:
+            if not has_extra_field:
+                raise NoExtraField(
+                    'The %r class has no `extra` field,'
+                    'but non-None extra was passed!' % cls
+                )
+            kwargs['extra'] = extra
+
         if target is None:
             kwargs.pop('target')
         log_entry = cls(**kwargs)
