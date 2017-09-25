@@ -1,0 +1,4 @@
+-r requirements-stylecheck.txt
+-r requirements-test.txt
+
+tox>=2.8

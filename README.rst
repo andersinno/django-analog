@@ -31,6 +31,11 @@ Basic Usage
 Development
 -----------
 
+::
+
+    pip install -e .
+    pip install -r requirements-dev.txt
+
 Tests
 ~~~~~
 
