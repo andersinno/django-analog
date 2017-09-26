@@ -54,8 +54,8 @@ Documentation
    image:: https://travis-ci.org/andersinno/django-analog.svg?branch=master
    :target: https://travis-ci.org/andersinno/django-analog
 .. |Coverage Status|
-   image:: https://coveralls.io/repos/andersinno/django-analog/badge.svg?branch=master&service=github
-   :target: https://coveralls.io/github/andersinno/django-analog?branch=master
+   image:: https://codecov.io/gh/andersinno/django-analog/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/andersinno/django-analog
 .. |Documentation Status|
    image:: https://readthedocs.org/projects/django-analog/badge/?version=latest
    :target: http://django-analog.readthedocs.org/en/latest/?badge=latest
