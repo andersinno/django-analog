@@ -1,9 +1,11 @@
 import pytest
 from django.db import models
 
-from analog import BaseLogEntry, define_log_model, LogEntryKind
+from analog import BaseLogEntry, LogEntryKind, define_log_model
 from analog.exceptions import NoExtraField, UnknownLogKind
-from analog_tests.models import FreeLogEntry, LoggedModel, LoggedModelLogEntry, SecondLoggedModel, ThirdLoggedModel
+from analog_tests.models import (
+    FreeLogEntry, LoggedModel, LoggedModelLogEntry, SecondLoggedModel,
+    ThirdLoggedModel)
 
 
 class RandomModel(models.Model):
@@ -34,19 +36,19 @@ def target_object(request):
 
 
 def test_model_sanity():
-    RandomModelLogEntry = define_log_model(RandomModel)
-    assert RandomModelLogEntry.__module__ == RandomModel.__module__
-    assert RandomModelLogEntry._meta.get_field("target").rel.to is RandomModel
+    log_entry_model = define_log_model(RandomModel)
+    assert log_entry_model.__module__ == RandomModel.__module__
+    assert log_entry_model._meta.get_field("target").rel.to is RandomModel
     try:
         rel = RandomModel.log_entries.related
         # TODO: Assert here too?
     except AttributeError:  # Django 1.9+
         rel = RandomModel.log_entries.rel
         assert rel.model is RandomModel
-        assert rel.related_model is RandomModelLogEntry
+        assert rel.related_model is log_entry_model
 
-    assert issubclass(RandomModelLogEntry, BaseLogEntry)
-    assert isinstance(RandomModelLogEntry(), BaseLogEntry)
+    assert issubclass(log_entry_model, BaseLogEntry)
+    assert isinstance(log_entry_model(), BaseLogEntry)
 
 
 @pytest.mark.django_db
@@ -80,7 +82,9 @@ def test_log_entry_kind(target_object):
 
 @pytest.mark.django_db
 def test_log_mutation(target_object):
-    target_object.add_log_entry(message="benign action", kind=LogEntryKind.EDIT)
+    target_object.add_log_entry(
+        message="benign action",
+        kind=LogEntryKind.EDIT)
     log_entry = qs_last(target_object.log_entries)
     log_entry.message = "sneak"
     with pytest.raises(ValueError):
@@ -89,7 +93,10 @@ def test_log_mutation(target_object):
 
 @pytest.mark.django_db
 def test_user_logging(admin_user, target_object):
-    target_object.add_log_entry(message="audit", kind=LogEntryKind.AUDIT, user=admin_user)
+    target_object.add_log_entry(
+        message="audit",
+        kind=LogEntryKind.AUDIT,
+        user=admin_user)
     log_entry = qs_last(target_object.log_entries)
     assert log_entry.user.is_superuser  # we put an admin in
 
@@ -163,7 +170,7 @@ def test_unsaved_object_logging_raises_error():
 def test_nullable_log_model():
     m = SecondLoggedModel.objects.create()
     m.add_log_entry(message="hello")
-    LogEntry = SecondLoggedModel.log_model
-    LogEntry.objects.create(message="world")
-    assert LogEntry.objects.first().target == m
-    assert LogEntry.objects.last().target == None
+    log_entry_model = SecondLoggedModel.log_model
+    log_entry_model.objects.create(message="world")
+    assert log_entry_model.objects.first().target == m
+    assert log_entry_model.objects.last().target is None
