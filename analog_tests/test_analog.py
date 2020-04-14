@@ -19,7 +19,8 @@ def qs_last(qs):  # Compatibility shim for old Djangos
         return list(qs.all())[-1]
 
 
-@pytest.fixture(scope="module", params=["free", "target"])
+@pytest.fixture(params=["free", "target"])
+@pytest.mark.django_db
 def target_object(request):
     if request.param == "target":
         return LoggedModel.objects.create()
@@ -38,7 +39,8 @@ def target_object(request):
 def test_model_sanity():
     log_entry_model = define_log_model(RandomModel)
     assert log_entry_model.__module__ == RandomModel.__module__
-    assert log_entry_model._meta.get_field("target").rel.to is RandomModel
+    target_field = log_entry_model._meta.get_field("target")
+    assert target_field.related_model is RandomModel
     try:
         rel = RandomModel.log_entries.related
         # TODO: Assert here too?
