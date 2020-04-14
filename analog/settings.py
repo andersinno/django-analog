@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.utils.six import string_types
 from django.utils.translation import ugettext_lazy as _
 
 _DEFAULT_KINDS = {
@@ -33,7 +32,7 @@ def _get_kind_labels(kinds):
         for (mnemonic, label) in kind_labels.items()
     )
     for key in list(kind_labels):
-        if isinstance(kind_labels[key], string_types):
+        if isinstance(kind_labels[key], str):
             kind_labels[key] = _(kind_labels[key])
     return kind_labels
 

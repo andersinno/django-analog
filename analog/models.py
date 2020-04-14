@@ -3,18 +3,17 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import force_text
-from django.utils.six import integer_types, string_types
 
 from analog.exceptions import NoExtraField, UnknownLogKind
 from analog.settings import KIND_IDS, KIND_LABELS, KINDS
 
 
 def _map_kind(kind):
-    if isinstance(kind, string_types):
+    if isinstance(kind, str):
         if kind not in KINDS:
             raise UnknownLogKind(kind)
         kind = KINDS[kind]
-    assert isinstance(kind, integer_types)
+    assert isinstance(kind, int)
     if kind not in KIND_IDS:
         raise UnknownLogKind(kind)
     return kind
