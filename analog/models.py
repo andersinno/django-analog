@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import force_text
@@ -56,7 +54,7 @@ class BaseLogEntry(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             raise ValueError("%r objects may not be modified" % self.__class__)
-        super(BaseLogEntry, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @classmethod
     def add_log_entry(

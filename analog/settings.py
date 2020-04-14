@@ -27,10 +27,10 @@ _DEFAULT_KIND_LABELS = {
 def _get_kind_labels(kinds):
     kind_labels = _DEFAULT_KIND_LABELS.copy()
     kind_labels.update(getattr(settings, "ANALOG_KIND_LABELS", {}))
-    kind_labels = dict(
-        (KINDS.get(mnemonic, mnemonic), label)
+    kind_labels = {
+        KINDS.get(mnemonic, mnemonic): label
         for (mnemonic, label) in kind_labels.items()
-    )
+    }
     for key in list(kind_labels):
         if isinstance(kind_labels[key], str):
             kind_labels[key] = _(kind_labels[key])
