@@ -19,8 +19,8 @@ def test_unknown():
 
 def test_internal():
     kind_map = LogEntryKindMap()
-    assert kind_map.__module__ == 'analog.util'
-    assert LogEntryKindMap.__module__ == 'analog.util'
+    assert kind_map.__module__ == "analog.util"
+    assert LogEntryKindMap.__module__ == "analog.util"
 
 
 def test_internal_attribute_error():
@@ -28,4 +28,5 @@ def test_internal_attribute_error():
     with pytest.raises(AttributeError) as excinfo:
         kind_map.__wrapped__
     assert str(excinfo.value) == (
-        "'LogEntryKindMap' object has no attribute '__wrapped__'")
+        "'LogEntryKindMap' object has no attribute '__wrapped__'"
+    )

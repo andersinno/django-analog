@@ -68,8 +68,14 @@ def define_log_model(
     log_entry_class = type(str(log_model_name), (base_class,), class_dict)
 
     def add_log_entry(
-        self, message, identifier=None, kind="other",
-        user=None, extra=None, save=True, **kwargs
+        self,
+        message,
+        identifier=None,
+        kind="other",
+        user=None,
+        extra=None,
+        save=True,
+        **kwargs
     ):
         return log_entry_class.add_log_entry(
             target=self,

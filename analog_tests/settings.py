@@ -4,17 +4,8 @@ INSTALLED_APPS = (
     "django.contrib.contenttypes",
     "analog_tests",
 )
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:'
-    }
-}
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 
-ANALOG_KINDS = {
-    "custom_kind": 3010
-}
+ANALOG_KINDS = {"custom_kind": 3010}
 
-ANALOG_KIND_LABELS = {
-    "custom_kind": "very custom"
-}
+ANALOG_KIND_LABELS = {"custom_kind": "very custom"}

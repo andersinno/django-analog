@@ -18,7 +18,7 @@ class LogEntryKindMap:
         :type kind: str
         :return: int
         """
-        if kind.startswith('_'):
+        if kind.startswith("_"):
             return self.__getattribute__(kind)
         kind = str(kind).lower()
         if kind not in KINDS:

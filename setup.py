@@ -1,6 +1,6 @@
 import setuptools
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setuptools.setup(
-        setup_requires=['setuptools>=30.3', 'setuptools-gitver'],
-        gitver=True)
+        setup_requires=["setuptools>=30.3", "setuptools-gitver"], gitver=True
+    )

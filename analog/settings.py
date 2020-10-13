@@ -9,7 +9,7 @@ _DEFAULT_KINDS = {
     "note": 4,
     "email": 5,
     "warning": 6,
-    "error": 7
+    "error": 7,
 }
 
 _DEFAULT_KIND_LABELS = {
@@ -20,7 +20,7 @@ _DEFAULT_KIND_LABELS = {
     "note": _("note"),
     "email": _("email"),
     "warning": _("warning"),
-    "error": _("error")
+    "error": _("error"),
 }
 
 

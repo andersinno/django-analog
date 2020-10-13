@@ -33,7 +33,8 @@ class BaseLogEntry(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     user = models.ForeignKey(
         getattr(settings, "AUTH_USER_MODEL", "auth.User"),
-        null=True, on_delete=models.PROTECT
+        null=True,
+        on_delete=models.PROTECT,
     )
     message = models.CharField(max_length=256)
     identifier = models.CharField(max_length=64, blank=True)
@@ -59,8 +60,13 @@ class BaseLogEntry(models.Model):
     @classmethod
     def add_log_entry(
         cls,
-        target, message, identifier=None, kind="other",
-        user=None, extra=None, save=True,
+        target,
+        message,
+        identifier=None,
+        kind="other",
+        user=None,
+        extra=None,
+        save=True,
         **kwargs
     ):
         """
@@ -117,17 +123,17 @@ class BaseLogEntry(models.Model):
             **kwargs
         )
 
-        has_extra_field = ('extra' in cls._meta._forward_fields_map)
+        has_extra_field = "extra" in cls._meta._forward_fields_map
         if extra is not None:
             if not has_extra_field:
                 raise NoExtraField(
-                    'The %r class has no `extra` field,'
-                    'but non-None extra was passed!' % cls
+                    "The %r class has no `extra` field,"
+                    "but non-None extra was passed!" % cls
                 )
-            kwargs['extra'] = extra
+            kwargs["extra"] = extra
 
         if target is None:
-            kwargs.pop('target')
+            kwargs.pop("target")
         log_entry = cls(**kwargs)
         log_entry.clean()
         if save:
