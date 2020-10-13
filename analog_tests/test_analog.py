@@ -15,7 +15,12 @@ class RandomModel(models.Model):
 @pytest.fixture(params=["free", "target"])
 @pytest.mark.django_db
 def target_object(request):
-    if request.param == "target":
+    return create_target_object(request.param)
+
+
+def create_target_object(kind):
+    assert kind in ("free", "target")
+    if kind == "target":
         return LoggedModel.objects.create()
     else:
         class FakeModel:
@@ -47,19 +52,25 @@ def test_model_sanity():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("kwarg", (False, True), ids=('args', 'kwargs'))
-def test_add_log_entry(target_object, kwarg):
+@pytest.mark.parametrize("target_type,arg_type", [
+    ("free", "kwargs"),
+    ("target", "args"),
+    ("target", "kwargs"),
+    # Note: ("free", "args") is ommitted here, because free log entries
+    # do not support kwargless api
+])
+def test_add_log_entry(target_type, arg_type):
+    target_object = create_target_object(target_type)
     if target_object.pk:
         # yigh, for some reason I don't care to look into more deeply (you
         # know what they say about abysses), Django 1.4 sometimes hasn't
         # actually saved this object correctly. So save it again just in case.
         target_object.save()
 
-    if kwarg:
+    if arg_type == "kwargs":
         target_object.add_log_entry(message="hello, world")
     else:
-        if not target_object.pk:
-            pytest.skip('free log entries do not support kwargless api')
+        assert target_object.pk
         target_object.add_log_entry("hello, world")
     assert target_object.log_entries.count() == 1
     log_entry = target_object.log_entries.last()
