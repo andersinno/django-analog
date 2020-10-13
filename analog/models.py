@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from analog.exceptions import NoExtraField, UnknownLogKind
 from analog.settings import KIND_IDS, KIND_LABELS, KINDS
@@ -111,7 +111,7 @@ class BaseLogEntry(models.Model):
         kwargs = dict(
             target=target,
             message=message,
-            identifier=force_text(identifier or "", errors="ignore")[:64],
+            identifier=force_str(identifier or "", errors="ignore")[:64],
             user=user,
             kind=kind,
             **kwargs
