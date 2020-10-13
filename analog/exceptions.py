@@ -8,7 +8,7 @@ class UnknownLogKind(ValueError):
         :param value: The invalid kind value passed in.
         """
         message = "Unknown log entry kind %r" % value
-        super(UnknownLogKind, self).__init__(message)
+        super().__init__(message)
 
 
 class NoExtraField(ValueError):

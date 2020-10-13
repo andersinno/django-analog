@@ -2,7 +2,7 @@ from analog.exceptions import UnknownLogKind
 from analog.settings import KINDS
 
 
-class LogEntryKindMap(object):
+class LogEntryKindMap:
     """
     A helper class for transitioning old code.
 

@@ -12,14 +12,8 @@ class RandomModel(models.Model):
     pass
 
 
-def qs_last(qs):  # Compatibility shim for old Djangos
-    try:
-        return qs.last()
-    except AttributeError:
-        return list(qs.all())[-1]
-
-
-@pytest.fixture(scope="module", params=["free", "target"])
+@pytest.fixture(params=["free", "target"])
+@pytest.mark.django_db
 def target_object(request):
     if request.param == "target":
         return LoggedModel.objects.create()
@@ -38,7 +32,8 @@ def target_object(request):
 def test_model_sanity():
     log_entry_model = define_log_model(RandomModel)
     assert log_entry_model.__module__ == RandomModel.__module__
-    assert log_entry_model._meta.get_field("target").rel.to is RandomModel
+    target_field = log_entry_model._meta.get_field("target")
+    assert target_field.related_model is RandomModel
     try:
         rel = RandomModel.log_entries.related
         # TODO: Assert here too?
@@ -67,7 +62,7 @@ def test_add_log_entry(target_object, kwarg):
             pytest.skip('free log entries do not support kwargless api')
         target_object.add_log_entry("hello, world")
     assert target_object.log_entries.count() == 1
-    log_entry = qs_last(target_object.log_entries)
+    log_entry = target_object.log_entries.last()
     if log_entry.target:
         assert isinstance(log_entry, LoggedModelLogEntry)
     assert isinstance(log_entry, BaseLogEntry)
@@ -76,7 +71,7 @@ def test_add_log_entry(target_object, kwarg):
 @pytest.mark.django_db
 def test_log_entry_kind(target_object):
     target_object.add_log_entry(message="edited", kind=LogEntryKind.EDIT)
-    log_entry = qs_last(target_object.log_entries)
+    log_entry = target_object.log_entries.last()
     assert log_entry.get_kind_display() == "edit"
 
 
@@ -85,7 +80,7 @@ def test_log_mutation(target_object):
     target_object.add_log_entry(
         message="benign action",
         kind=LogEntryKind.EDIT)
-    log_entry = qs_last(target_object.log_entries)
+    log_entry = target_object.log_entries.last()
     log_entry.message = "sneak"
     with pytest.raises(ValueError):
         log_entry.save()
@@ -97,7 +92,7 @@ def test_user_logging(admin_user, target_object):
         message="audit",
         kind=LogEntryKind.AUDIT,
         user=admin_user)
-    log_entry = qs_last(target_object.log_entries)
+    log_entry = target_object.log_entries.last()
     assert log_entry.user.is_superuser  # we put an admin in
 
 
@@ -106,7 +101,7 @@ def test_modify_before_save(target_object):
     le = target_object.add_log_entry(message="hi", save=False)
     le.message = "hey"
     le.save()
-    le = qs_last(target_object.log_entries)
+    le = target_object.log_entries.last()
     assert le.message == "hey"
 
 
@@ -147,7 +142,7 @@ def test_free_log_entries():
     )
     assert fle.pk
     assert not fle.target
-    assert qs_last(FreeLogEntry.objects.all()) == fle
+    assert FreeLogEntry.objects.last() == fle
 
 
 @pytest.mark.django_db
