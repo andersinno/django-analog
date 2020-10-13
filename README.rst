@@ -51,8 +51,8 @@ Documentation
     sphinx-build -b html docs docs/_build
 
 .. |Build Status|
-   image:: https://travis-ci.org/andersinno/django-analog.svg?branch=master
-   :target: https://travis-ci.org/andersinno/django-analog
+   image:: https://github.com/andersinno/django-analog/workflows/Test/badge.svg
+   :target: https://github.com/andersinno/django-analog/actions
 .. |Coverage Status|
    image:: https://codecov.io/gh/andersinno/django-analog/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/andersinno/django-analog
