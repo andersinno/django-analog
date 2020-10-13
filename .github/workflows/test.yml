@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  push: {branches: [master, test]}
+  pull_request: {branches: [master, test]}
+
+jobs:
+  test:
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.6", "3.7", "3.8", "3.9"]
+        toxenv: [""]
+        include:
+          - {platform: ubuntu-latest, python: "3.6", toxenv: "style"}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install Tox and tox-gh-actions
+        run: pip install tox tox-gh-actions
+      - name: Test with Tox
+        run: tox
+        env:
+          TOXENV: ${{ matrix.toxenv }}
+      - name: Upload coverage data to codecov.io
+        uses: codecov/codecov-action@v1
