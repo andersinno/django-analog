@@ -37,7 +37,7 @@ Declaring labels is optional -- the mnemonic will be substituted instead
 if you don't declare them -- but it's definitely good sportsmanship.
 
 .. note:: For your localization convenience, any bare strings here will
-          be converted to Django's ``ugettext_lazy`` instances.
+          be converted to Django's ``gettext_lazy`` instances.
 
 .. code-block:: python
 
